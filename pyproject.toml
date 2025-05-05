@@ -1,12 +1,12 @@
 [project]
-name = "goit-pyweb-hw-12"
+name = "goit-pyweb-hw-13"
 version = "0.1.0"
 description = ""
 authors = [
     {name = "Alexandr-1973",email = "144156771+Alexandr-1973@users.noreply.github.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4.0"
 dependencies = [
     "fastapi (>=0.115.12,<0.116.0)",
     "uvicorn[standard] (>=0.34.0,<0.35.0)",
@@ -20,7 +20,10 @@ dependencies = [
     "python-multipart (>=0.0.20,<0.0.21)",
     "python-jose[cryptography] (>=3.4.0,<4.0.0)",
     "bcrypt (==3.2.0)",
-    "passlib (>=1.7.4,<2.0.0)"
+    "passlib (>=1.7.4,<2.0.0)",
+    "fastapi-mail (>=1.4.2,<2.0.0)",
+    "jinja2 (>=3.1.6,<4.0.0)",
+    "fastapi-limiter (>=0.1.6,<0.2.0)"
 ]
 
 

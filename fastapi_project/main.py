@@ -1,12 +1,21 @@
+import redis.asyncio as redis
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from fastapi_limiter import FastAPILimiter
 from fastapi_project.src.database.db import get_db
 from fastapi_project.src.routes import contacts, auth
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    r = redis.Redis(host='localhost', port=6379, db=0, encoding="utf-8", decode_responses=True)
+    await FastAPILimiter.init(r)
+    yield
+    await r.aclose()
+
+app = FastAPI(lifespan=lifespan)
 
 origins = ["*"]
 
@@ -20,6 +29,7 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix='/api')
 app.include_router(contacts.router, prefix="/api")
+
 
 @app.get("/")
 def index():
