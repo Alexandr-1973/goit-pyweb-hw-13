@@ -128,7 +128,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+fastapi_project/src/.env
 .venv
 env/
 venv/

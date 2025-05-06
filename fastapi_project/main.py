@@ -5,7 +5,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_limiter import FastAPILimiter
 from fastapi_project.src.database.db import get_db
-from fastapi_project.src.routes import contacts, auth
+from fastapi_project.src.routes import contacts, auth, users
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
@@ -29,7 +29,7 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix='/api')
 app.include_router(contacts.router, prefix="/api")
-
+app.include_router(users.router, prefix='/api')
 
 @app.get("/")
 def index():

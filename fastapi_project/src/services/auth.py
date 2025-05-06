@@ -6,8 +6,7 @@ from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta, UTC
-
-from pycparser.ply.yacc import token
+from fastapi_project.src.conf.config import config
 from sqlalchemy.ext.asyncio import AsyncSession
 from urllib.request import Request
 from fastapi_project.src.database.db import get_db
@@ -16,10 +15,15 @@ from fastapi_project.src.repository import users as repository_users
 
 class Auth:
     pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    SECRET_KEY = "secret_key"
-    ALGORITHM = "HS256"
+    SECRET_KEY = config.SECRET_KEY_JWT
+    ALGORITHM = config.ALGORITHM
     oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
-    cache = redis.Redis(host='localhost', port=6379, db=0)
+    cache = redis.Redis(
+        host=config.REDIS_DOMAIN,
+        port=config.REDIS_PORT,
+        db=0,
+        password=config.REDIS_PASSWORD,
+    )
 
     def verify_password(self, plain_password, hashed_password):
         return self.pwd_context.verify(plain_password, hashed_password)
@@ -59,29 +63,7 @@ class Auth:
         except JWTError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Could not validate credentials')
 
-    # async def get_current_user(self, token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
-    #     credentials_exception = HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED,
-    #         detail="Could not validate credentials",
-    #         headers={"WWW-Authenticate": "Bearer"},
-    #     )
-    #
-    #     try:
-    #         # Decode JWT
-    #         payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
-    #         if payload['scope'] == 'access_token':
-    #             email = payload["sub"]
-    #             if email is None:
-    #                 raise credentials_exception
-    #         else:
-    #             raise credentials_exception
-    #     except JWTError:
-    #         raise credentials_exception
-    #
-    #     user = await repository_users.get_user_by_email(email, db)
-    #     if user is None:
-    #         raise credentials_exception
-    #     return user
+
 
     async def get_current_user(
             self, token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)
