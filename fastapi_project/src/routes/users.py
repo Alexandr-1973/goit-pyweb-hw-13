@@ -1,5 +1,4 @@
 import pickle
-
 import cloudinary
 import cloudinary.uploader
 from fastapi import (
@@ -10,7 +9,6 @@ from fastapi import (
 )
 from fastapi_limiter.depends import RateLimiter
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from fastapi_project.src.database.db import get_db
 from fastapi_project.src.database.models import User
 from fastapi_project.src.schemas import UserResponse
