@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from fastapi_project.src.database.models import Base
-from fastapi_project.src.conf.config import config
+from fastapi_project.src.conf.config import config as project_config
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -17,7 +17,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", config.DB_URL.replace("+asyncpg", ""))
+config.set_main_option("sqlalchemy.url", project_config.DB_URL.replace("+asyncpg", ""))
 
 
 # add your model's MetaData object here
